@@ -1,0 +1,85 @@
+# Progress review: eight-slide outline
+
+All measured numbers below come from `results/`. Architecture and timeline
+items are proposals. This is an outline, not a generated PowerPoint deck.
+
+## 1. Problem — which service actually started the incident?
+
+- A distributed application can show errors in several services at once.
+- Task: rank service/candidate names from incident metrics.
+- Ground truth is the service where the benchmark fault was injected.
+- Current setting: offline localization with a supplied injection timestamp.
+
+**Visual:** `results/fig_case_metrics.png`; explain the dashed injection line.
+
+## 2. Motivation — the loudest service can be a victim
+
+- Example `re1ob_productcatalogservice_loss_3`: packet loss injected into `productcatalogservice`; its score is only 14.99.
+- Its caller `checkoutservice` scores 171.58 on latency-90, about 11x louder.
+- Constant metrics are ignored, so this is not a scaling artifact; 28 of 123 cases still have a louder non-root.
+- Propagation through the caller is the hypothesis this project tests; the plot alone does not prove it.
+
+**Figure:** `results/fig_victim_louder_than_culprit.png`.
+
+## 3. Why ML — learn which anomaly patterns identify roots
+
+- Current heuristic: maximum standardized before/after mean shift per service.
+- It ignores dependencies: even after the constant-metric fix, packet-loss roots are often outranked by their callers.
+- Proposed learned component: encode temporal anomaly patterns, then predict service relevance.
+- Compare a learned independent ranker with a graph model to test the value of dependencies.
+- A GNN is not automatically novel or better; benchmark results must justify it.
+
+**Visual/table:** show the baseline formula next to the encoder → dependency GNN → ranking proposal.
+
+## 4. Related work — place the proposal among existing approaches
+
+- MicroRCA: attributed-graph reasoning about performance symptoms and resource measurements.
+- RCD / CIRCA: localized causal discovery / conditional-distribution intervention recognition.
+- BARO: robust change-point-based RCA; optional baseline skipped in this environment.
+- Eadro: joint detection and localization from multiple telemetry sources; RCAEval: shared datasets and evaluation.
+
+**Table:** use all six rows from [related_work.md](related_work.md), retaining its primary-source links.
+Do not copy published accuracy numbers into our results table.
+
+## 5. Dataset — actual RE1-OB recordings
+
+- 125 Online Boutique cases; five fault types, 25 cases each; five distinct annotated roots.
+- 49–59 metric columns and 13–19 candidate prefixes per case; some prefixes represent infrastructure or unexpected source names.
+- 63–4,201 rows per recording; varying pre/post recording lengths.
+- 5,243 missing cells in 10 recordings; no cross-window filling.
+- 123 usable window pairs; two supplied recordings remain uncorrected and explicitly flagged.
+
+**Table:** `results/dataset_overview.csv` grouped by fault; schema/examples in `docs/DATA_FORMAT.md`.
+
+## 6. Baseline results — two baselines and their failures
+
+- Baseline 1, all metrics (all 125 cases): AC@1=49.60%, AC@3=88.00%, Avg@5=80.80%.
+- Why it failed: metrics constant before injection get divided by 1e-8, giving 61 non-root wins (e.g. two error blips beat a CPU jump to 97%).
+- Baseline 2, constant metrics ignored: AC@1=76.00%, AC@3=90.40%, AC@5=98.40%, Avg@5=89.28% (evaluable-only AC@1=77.24%).
+- Packet loss stays hardest (AC@1=32.00%); worst case `re1ob_checkoutservice_loss_1` has the root at rank 5.
+- The fix was chosen after seeing these failures, so it is an analysis result, not a held-out test; learned-model accuracy is **not yet run**.
+
+**Figures:** `results/fig_baseline_comparison.png`, `results/fig_zero_variance_artifact.png`.
+**Tables:** `results/zscore_summary.csv`, `results/zscore_nonconst_summary.csv`, `results/zscore_nonconst_worst_cases.csv`.
+**Speaker notes:** [failure_analysis.md](failure_analysis.md).
+
+## 7. Proposed method — learned encoding, graph reasoning, ranking
+
+- Encode each service's normalized metric sequence into an anomaly representation.
+- Pass representations through a GNN over a separately verified service dependency graph, then output service ranks.
+- Train later on synthetic/controlled fault-injection scenarios; telemetry should be collected from running applications. Purely simulated series must be identified separately.
+- Split by whole incidents/scenarios; compare with the same encoder without graph edges and stronger statistical baselines.
+- Cross-system test: train on one application and reserve a different application; graph acquisition, training, and that test are **not yet run**.
+
+**Diagram:** metrics → learned anomaly encoder → dependency GNN → service ranking.
+**Status:** RE1-OB does not supply traces or an audited dependency graph. No new fault injection this week.
+
+## 8. Semester timeline — staged experiments
+
+- Week 1, completed: official subset, data audit, two z-score baselines, executed notebooks, review outline.
+- Weeks 2–3: resolve data-quality questions with upstream evidence; try robust scaling (median/MAD) and aggregation; freeze incident-level splits.
+- Weeks 4–6: train a simple temporal encoder/ranker; compare against statistical methods and report uncertainty across runs.
+- Weeks 7–9: verify topology, add GNN, and run graph/no-graph ablations; schedule controlled fault data collection only at that stage.
+- Weeks 10–12: evaluate held-out scenarios, attempt a reserved-system test if data is available, analyze failures, and package the report; broader deployment is capstone work.
+
+**Visual:** a simple week-by-week timeline built from these five stages; no invented completion dates or performance targets.

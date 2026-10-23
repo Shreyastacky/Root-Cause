@@ -1,0 +1,24 @@
+{
+  "method": "zscore",
+  "n_cases": 125,
+  "subset": "RE1-OB",
+  "prediction_inputs": [
+    "metrics",
+    "known injection timestamp"
+  ],
+  "normal_window": "all available time < inject_time",
+  "anomalous_window": "all available time >= inject_time",
+  "std_ddof": 1,
+  "eps": 1e-08,
+  "missing_values": "per-window observed values; no imputation",
+  "rule": "max |mean shift| / (pre std + 1e-8) over all metrics",
+  "constant_normal_metrics": "kept (std + eps)",
+  "service_aggregation": "maximum metric z-score",
+  "candidate_policy": "all observed metric prefixes; no root-label filtering",
+  "ties": "alphabetical service name",
+  "training": "none",
+  "n_evaluable": 123,
+  "n_invalid_window": 2,
+  "invalid_window_policy": "empty ranking; infinity rank; miss in all_cases; separately report evaluable_only",
+  "note": "Full-record offline diagnosis, not online detection."
+}

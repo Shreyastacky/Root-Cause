@@ -1,0 +1,11 @@
+.venv/
+data/raw/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.jupyter/
+.mplconfig/
+.pytest_cache/
+build/
+dist/

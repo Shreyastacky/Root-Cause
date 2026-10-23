@@ -1,0 +1,26 @@
+{
+  "case_id": "re1ob_productcatalogservice_loss_3",
+  "method": "zscore_nonconst",
+  "selection_rule": "hand-picked from victim_search_zscore_nonconst.csv: clearest documented caller -> callee dependency",
+  "inject_time": 1692667087,
+  "details": [
+    {
+      "service": "productcatalogservice",
+      "role": "Annotated root",
+      "winning_metric": "latency-50",
+      "score": 14.988638554581078,
+      "normal_mean": 0.00031653763279483203,
+      "normal_std": 9.126051890576839e-06,
+      "anomalous_mean": 0.0004534746123985854
+    },
+    {
+      "service": "checkoutservice",
+      "role": "Higher-scoring non-root",
+      "winning_metric": "latency-90",
+      "score": 171.5805534510626,
+      "normal_mean": 0.04316726497857689,
+      "normal_std": 0.0014738102031573263,
+      "anomalous_mean": 0.29604615112366844
+    }
+  ]
+}

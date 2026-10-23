@@ -1,0 +1,12 @@
+{
+  "package": "RCAEval",
+  "version": "1.8.1",
+  "metadata_url": "https://pypi.org/pypi/RCAEval/1.8.1/json",
+  "status": "skipped_before_install",
+  "reason": "Optional default extra conflicts with this Python 3.11 environment: numpy<2 versus pinned numpy==2.1.3, and ipykernel==6.23.1 versus pinned ipykernel==6.29.5. No baseline-package installation or environment downgrade was attempted.",
+  "relevant_requirements": [
+    "ipykernel==6.23.1; extra == \"default\"",
+    "numpy<2; python_version < \"3.13\" and extra == \"default\"",
+    "numpy>=2.1; python_version >= \"3.13\" and extra == \"default\""
+  ]
+}

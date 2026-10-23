@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "hashed_data_files": 251,
+  "indexed_cases_checked": 125,
+  "rankings_independently_recomputed": {
+    "zscore": 123,
+    "zscore_nonconst": 123
+  },
+  "invalid_window_cases": 2,
+  "summary_rows_independently_checked": 24,
+  "notebooks": [
+    {
+      "name": "01_eda.ipynb",
+      "executed_code_cells": 7,
+      "embedded_images": 3
+    },
+    {
+      "name": "02_baseline.ipynb",
+      "executed_code_cells": 5,
+      "embedded_images": 1
+    }
+  ],
+  "slides_checked": 8,
+  "missing_local_links": []
+}

@@ -1,0 +1,26 @@
+{
+  "case_id": "re1ob_adservice_cpu_3",
+  "method": "zscore",
+  "selection_rule": "first case_id alphabetically among non-root wins with constant metrics kept",
+  "inject_time": 1685211245,
+  "details": [
+    {
+      "service": "adservice",
+      "role": "Annotated root",
+      "winning_metric": "cpu",
+      "score": 892.9370312933976,
+      "normal_mean": 1.624495607731103,
+      "normal_std": 0.1065337811025945,
+      "anomalous_mean": 96.7524627673128
+    },
+    {
+      "service": "frontend",
+      "role": "Higher-scoring non-root",
+      "winning_metric": "error",
+      "score": 190385.53069966682,
+      "normal_mean": 0.0,
+      "normal_std": 0.0,
+      "anomalous_mean": 0.0019038553069966682
+    }
+  ]
+}

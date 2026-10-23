@@ -1,0 +1,71 @@
+{
+  "n_cases": 125,
+  "n_evaluable": 123,
+  "invalid_window_cases": [
+    "re1ob_currencyservice_loss_1",
+    "re1ob_productcatalogservice_cpu_3"
+  ],
+  "fault_counts": {
+    "cpu": 25,
+    "delay": 25,
+    "disk": 25,
+    "loss": 25,
+    "mem": 25
+  },
+  "root_services": [
+    "adservice",
+    "cartservice",
+    "checkoutservice",
+    "currencyservice",
+    "productcatalogservice"
+  ],
+  "candidate_services": [
+    "InboundPassthroughClusterIpv4",
+    "PassthroughCluster",
+    "adservice",
+    "carts",
+    "cartservice",
+    "catalogue",
+    "checkoutservice",
+    "currencyservice",
+    "emailservice",
+    "front-end",
+    "frontend",
+    "frontend-check",
+    "frontend-external",
+    "main",
+    "orders",
+    "paymentservice",
+    "productcatalogservice",
+    "recommendationservice",
+    "redis",
+    "shippingservice"
+  ],
+  "metric_names": [
+    "cpu",
+    "error",
+    "latency",
+    "latency-50",
+    "latency-90",
+    "load",
+    "mem",
+    "workload"
+  ],
+  "metric_count_range": [
+    49,
+    59
+  ],
+  "service_count_range": [
+    13,
+    19
+  ],
+  "row_count_range": [
+    63,
+    4201
+  ],
+  "missing_values": 5243,
+  "cases_with_missing_values": 10,
+  "infinite_values": 0,
+  "duplicate_timestamps": 0,
+  "all_roots_present": true
+}
