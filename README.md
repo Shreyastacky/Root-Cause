@@ -3,7 +3,7 @@
 Given measurements collected during an incident, rank the service/candidate
 most likely to be the annotated root cause. This university progress-review
 project establishes a reproducible dataset audit and **two evaluated heuristic
-baselines**. A learned model and a graph neural network are proposed future work.
+baselines**, plus a **supervised Random Forest evaluated with scenario-grouped cross-validation**. A temporal encoder and graph neural network remain future work.
 
 ## Current progress
 
@@ -13,7 +13,7 @@ baselines**. A learned model and a graph neural network are proposed future work
   (31.87 MB), excluding downloader cache metadata.
 - **123 cases are evaluable**; two supplied recordings have
   invalid before/after windows. Their timestamps and raw files remain unchanged.
-- Both notebooks executed top to bottom: **7 code cells in EDA and
+- The original two notebooks executed top to bottom: **7 code cells in EDA and
   5 in baseline, zero errors**, with saved outputs.
 - Baseline 1 (`zscore`): AC@1 **49.60%**. Baseline 2
   (`zscore_nonconst`, ignores metrics that were constant before injection):
@@ -60,7 +60,32 @@ See [DATA_FORMAT.md](docs/DATA_FORMAT.md) for the actual schema, labels, missing
 values, candidate names, fault counts, and invalid timestamps. If a future
 download fails, stop and report the error; do not substitute invented data.
 
-## Results
+## Supervised stage: first trained model
+
+Five-fold grouped cross-validation keeps all repetitions of each root-service /
+fault-type scenario together. The fixed Random Forest receives 48 numeric
+service-change features, excluding names and labels. Its scores are out-of-fold.
+
+| method              |   n_cases | AC@1   | AC@3   | AC@5    | Avg@5   |
+|:--------------------|----------:|:-------|:-------|:--------|:--------|
+| Random Forest (OOF) |       123 | 91.87% | 95.93% | 99.19%  | 96.10%  |
+| Original z-score    |       123 | 50.41% | 89.43% | 95.12%  | 82.11%  |
+| Nonconstant z-score |       123 | 77.24% | 91.87% | 100.00% | 90.73%  |
+
+Primary denominator: **123 evaluable incidents**. With invalid cases included as
+misses, Random Forest AC@1 is **90.40%** over 125 cases.
+This is exploratory within-application CV on already-explored data, not a pristine
+final test. Fold AC@1 ranges from 68% to 100%; the model does not improve every
+ranking metric. See the [full supervised report](docs/SUPERVISED_BASELINE.md),
+[fixed protocol](docs/ML_PROTOCOL.md), and [executed third notebook](notebooks/03_supervised.ipynb).
+
+```powershell
+.\.venv\Scripts\python.exe -m rca.supervised
+```
+
+![Grouped supervised comparison](results/supervised/fig_grouped_cv.png)
+
+## Original heuristic results
 
 All metrics are **service-level**, between 0 and 1, shown here as percentages.
 For `all_cases`, unscorable recordings count as misses. The second row shows the
@@ -126,8 +151,7 @@ The ranker receives no fault label, case identifier, or root label.
 
 **This is offline localization after an incident**, using the full available
 post-injection recording. It does not yet detect an incident online or establish
-causal propagation. There is no trained model, train/test split, cross-system
-generalization result, or deployment claim in this week's work. The
+causal propagation. The original heuristic experiment had no training split. The supervised stage above adds grouped train/test folds, but no cross-system generalization or deployment result. The
 constant-metric rule was chosen after looking at failures on these same cases,
 so its score is an analysis result, not a held-out test.
 
@@ -172,6 +196,7 @@ model-produced rank. No timestamp correction was guessed.
   displays both denominator policies, compares them, and explains two failures.
 - Read-only rendered copies: [EDA](results/01_eda.html) and
   [baseline](results/02_baseline.html). These include executed outputs.
+- [03_supervised.ipynb](notebooks/03_supervised.ipynb): 48 features, grouped splits, trained Random Forest, comparisons and failures. [Rendered copy](results/03_supervised.html).
 - [Eight-slide outline](docs/slide_outline.md), [related work](docs/related_work.md),
   and [execution record](results/notebook_execution.json).
 
@@ -202,9 +227,9 @@ slide numbers from CSVs.
 .\.venv\Scripts\python.exe -m pip check
 ```
 
-Seven focused tests check the score formula, injection boundary, missing-value
+Thirteen focused tests check the score formula, injection boundary, missing-value
 handling, deterministic ties, invalid windows, metric denominators, and that
-`zscore_nonconst` ignores constant metrics.
+`zscore_nonconst` ignores constant metrics. New tests also cover feature semantics, identity independence, and disjoint scenario folds.
 Constructed test fixtures are not presented as benchmark recordings.
 
 The first download attempt failed with an expired cached OAuth token. Retrying
@@ -218,13 +243,12 @@ this pinned environment. We did not downgrade it or claim a BARO result. See
 [recorded package constraints](results/optional_baro_check.json).
 
 Docker, Kubernetes, new fault injection, a dependency graph, and GNN training
-were deliberately not set up. Existing raw files were not modified.
+remain deliberately not set up. Existing raw files were not modified.
 
 ## Next steps
 
 1. Try robust scaling (median/MAD) and other aggregations as stronger statistical baselines.
-2. Fix evaluation splits by whole incident; group repeated scenarios to limit
-   leakage. No row-level random split of the same incident.
+2. Completed: scenario-grouped five-fold splits and a fixed Random Forest baseline. Reserve genuinely new data for the next evaluation; do not retune to these CV results.
 3. Learn an anomaly encoder and compare it with a simple learned service ranker.
 4. Verify application dependency topology, then test a GNN against an otherwise
    identical model without graph edges. Do not assume graph learning is causal.
@@ -237,3 +261,7 @@ Luan Pham, Hongyu Zhang, Huong Ha, Flora Salim, and Xiuzhen Zhang. 2025.
 [RCAEval: A Benchmark for Root Cause Analysis of Microservice Systems with Telemetry Data](https://doi.org/10.1145/3701716.3715290).
 Companion Proceedings of the ACM Web Conference 2025. The upstream dataset
 is MIT licensed; our experiment is independently implemented.
+
+## Supervised verification
+
+All 3 notebooks have saved executed outputs. The supervised split records 25 scenario groups and 1649 candidate rows. The verification script checks fold isolation, source/data hashes, candidate scores and saved rankings, and reproduces the forests.

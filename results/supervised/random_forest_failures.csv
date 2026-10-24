@@ -1,0 +1,11 @@
+case_id,fault_type,fold,true_root,rank_of_true_root
+re1ob_productcatalogservice_loss_4,loss,2,productcatalogservice,6.0
+re1ob_productcatalogservice_loss_2,loss,2,productcatalogservice,5.0
+re1ob_productcatalogservice_loss_1,loss,2,productcatalogservice,4.0
+re1ob_productcatalogservice_loss_3,loss,2,productcatalogservice,4.0
+re1ob_productcatalogservice_loss_5,loss,2,productcatalogservice,4.0
+re1ob_checkoutservice_loss_1,loss,2,checkoutservice,3.0
+re1ob_cartservice_loss_4,loss,2,cartservice,2.0
+re1ob_checkoutservice_loss_2,loss,2,checkoutservice,2.0
+re1ob_currencyservice_delay_4,delay,1,currencyservice,2.0
+re1ob_productcatalogservice_delay_5,delay,4,productcatalogservice,2.0

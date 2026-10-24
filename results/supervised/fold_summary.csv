@@ -1,0 +1,16 @@
+evaluation_set,scope,fault_type,n_cases,n_evaluable,AC@1,AC@2,AC@3,AC@4,AC@5,Avg@5,method,fold
+evaluable_only,overall,all,25,25,0.96,1.0,1.0,1.0,1.0,0.992,random_forest,1
+evaluable_only,overall,all,25,25,0.68,0.76,0.8,0.92,0.96,0.8240000000000001,random_forest,2
+evaluable_only,overall,all,25,25,1.0,1.0,1.0,1.0,1.0,1.0,random_forest,3
+evaluable_only,overall,all,24,24,0.9583333333333334,1.0,1.0,1.0,1.0,0.9916666666666668,random_forest,4
+evaluable_only,overall,all,24,24,1.0,1.0,1.0,1.0,1.0,1.0,random_forest,5
+evaluable_only,overall,all,25,25,0.4,0.84,0.96,1.0,1.0,0.8400000000000001,zscore,1
+evaluable_only,overall,all,25,25,0.32,0.44,0.56,0.68,0.76,0.5519999999999999,zscore,2
+evaluable_only,overall,all,25,25,0.6,0.88,1.0,1.0,1.0,0.8960000000000001,zscore,3
+evaluable_only,overall,all,24,24,0.5416666666666666,0.9583333333333334,0.9583333333333334,1.0,1.0,0.8916666666666668,zscore,4
+evaluable_only,overall,all,24,24,0.6666666666666666,1.0,1.0,1.0,1.0,0.9333333333333332,zscore,5
+evaluable_only,overall,all,25,25,0.88,1.0,1.0,1.0,1.0,0.976,zscore_nonconst,1
+evaluable_only,overall,all,25,25,0.48,0.52,0.6,0.76,1.0,0.672,zscore_nonconst,2
+evaluable_only,overall,all,25,25,0.76,1.0,1.0,1.0,1.0,0.952,zscore_nonconst,3
+evaluable_only,overall,all,24,24,0.9166666666666666,0.9583333333333334,1.0,1.0,1.0,0.975,zscore_nonconst,4
+evaluable_only,overall,all,24,24,0.8333333333333334,1.0,1.0,1.0,1.0,0.9666666666666668,zscore_nonconst,5

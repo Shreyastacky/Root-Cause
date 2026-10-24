@@ -1,0 +1,8 @@
+# Stable source/protocol hashes across Windows and Linux checkouts.
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.txt text eol=lf
+*.ipynb text eol=lf
+*.html text eol=lf

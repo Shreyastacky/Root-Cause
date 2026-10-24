@@ -22,7 +22,7 @@ def main():
     artifact = json.loads((results / 'fig_zero_variance_artifact.json').read_text())
     worst = pd.read_csv(results / 'zscore_nonconst_worst_cases.csv')
     execution = json.loads((results / 'notebook_execution.json').read_text())
-    assert len(execution) == 2 and all(row['errors'] == 0 for row in execution)
+    assert len(execution) >= 2 and all(row['errors'] == 0 for row in execution)
     overall = summary.query("evaluation_set == 'all_cases' and scope == 'overall'").iloc[0]
     valid = summary.query("evaluation_set == 'evaluable_only' and scope == 'overall'").iloc[0]
     by_fault = summary.query("evaluation_set == 'all_cases' and scope == 'fault_type'")
@@ -271,7 +271,6 @@ Luan Pham, Hongyu Zhang, Huong Ha, Flora Salim, and Xiuzhen Zhang. 2025.
 Companion Proceedings of the ACM Web Conference 2025. The upstream dataset
 is MIT licensed; our experiment is independently implemented.
 """
-    (ROOT / 'README.md').write_text(textwrap.dedent(readme), encoding='utf-8')
 
     slides = f"""# Progress review: eight-slide outline
 
@@ -359,6 +358,10 @@ Do not copy published accuracy numbers into our results table.
 
 **Visual:** a simple week-by-week timeline built from these five stages; no invented completion dates or performance targets.
 """
+    if (results / 'supervised/summary.csv').exists():
+        from rca.ml_report import update_project_reports
+        readme, slides = update_project_reports(readme, slides, execution)
+    (ROOT / 'README.md').write_text(textwrap.dedent(readme), encoding='utf-8')
     (ROOT / 'docs/slide_outline.md').write_text(textwrap.dedent(slides), encoding='utf-8')
     print('Updated README.md and docs/slide_outline.md from saved results.')
 

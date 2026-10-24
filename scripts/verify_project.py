@@ -113,6 +113,9 @@ def main():
               'invalid_window_cases': int(saved['status'].ne('ok').sum()),
               'summary_rows_independently_checked': summary_rows, 'notebooks': notebooks,
               'slides_checked': len(slides), 'missing_local_links': missing_links}
+    if (results / 'supervised/split_manifest.json').exists():
+        from verify_supervised import verify_supervised
+        report['supervised'] = verify_supervised()
     (results / 'verification.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 

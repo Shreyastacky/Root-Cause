@@ -12,5 +12,12 @@
     "executed_cells": 5,
     "errors": 0,
     "html": "02_baseline.html"
+  },
+  {
+    "notebook": "03_supervised.ipynb",
+    "code_cells": 6,
+    "executed_cells": 6,
+    "errors": 0,
+    "html": "03_supervised.html"
   }
 ]

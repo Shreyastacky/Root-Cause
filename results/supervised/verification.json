@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "scenario_groups": 25,
+  "folds_independently_refitted": 5,
+  "held_out_incidents": 123,
+  "candidate_scores_verified": 1649,
+  "numeric_features": 48,
+  "source_hashes_verified": true,
+  "summary_rows_checked": 51
+}

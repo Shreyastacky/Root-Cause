@@ -21,15 +21,15 @@ items are proposals. This is an outline, not a generated PowerPoint deck.
 
 **Figure:** `results/fig_victim_louder_than_culprit.png`.
 
-## 3. Why ML — learn which anomaly patterns identify roots
+## 3. ML method — learn combinations of service changes
 
-- Current heuristic: maximum standardized before/after mean shift per service.
-- It ignores dependencies: even after the constant-metric fix, packet-loss roots are often outranked by their callers.
-- Proposed learned component: encode temporal anomaly patterns, then predict service relevance.
-- Compare a learned independent ranker with a graph model to test the value of dependencies.
-- A GNN is not automatically novel or better; benchmark results must justify it.
+- Completed: a Random Forest classifier scores root versus non-root candidates.
+- Inputs: 48 fixed features describing per-metric changes, variability, availability and onset.
+- Service names, fault labels and case IDs are excluded from the feature matrix.
+- Rank each incident's candidates by its forest's class-1 score; no calibrated-confidence claim.
+- A temporal encoder and GNN remain later experiments, not implemented methods.
 
-**Visual/table:** show the baseline formula next to the encoder → dependency GNN → ranking proposal.
+**Visual:** feature extraction → forest trained on other scenario groups → held-out service ranking.
 
 ## 4. Related work — place the proposal among existing approaches
 
@@ -51,17 +51,17 @@ Do not copy published accuracy numbers into our results table.
 
 **Table:** `results/dataset_overview.csv` grouped by fault; schema/examples in `docs/DATA_FORMAT.md`.
 
-## 6. Baseline results — two baselines and their failures
+## 6. Grouped evaluation — first trained baseline
 
-- Baseline 1, all metrics (all 125 cases): AC@1=49.60%, AC@3=88.00%, Avg@5=80.80%.
-- Why it failed: metrics constant before injection get divided by 1e-8, giving 61 non-root wins (e.g. two error blips beat a CPU jump to 97%).
-- Baseline 2, constant metrics ignored: AC@1=76.00%, AC@3=90.40%, AC@5=98.40%, Avg@5=89.28% (evaluable-only AC@1=77.24%).
-- Packet loss stays hardest (AC@1=32.00%); worst case `re1ob_checkoutservice_loss_1` has the root at rank 5.
-- The fix was chosen after seeing these failures, so it is an analysis result, not a held-out test; learned-model accuracy is **not yet run**.
+- Fixed five-fold GroupKFold: all repetitions of each root/fault scenario stay together; 25 groups.
+- Primary comparison on 123 evaluable incidents: Random Forest AC@1=91.87%, AC@3=95.93%, Avg@5=96.10%; stronger heuristic AC@1=77.24%.
+- All 125 supplied incidents, invalid cases counted as misses: forest AC@1=90.40%.
+- Fold AC@1 varies from 68% to 100%; packet-loss failures remain. The forest's AC@5 is slightly worse than the stronger heuristic.
+- This is exploratory within-application CV on previously explored data, not cross-system or pristine final-test performance.
 
-**Figures:** `results/fig_baseline_comparison.png`, `results/fig_zero_variance_artifact.png`.
-**Tables:** `results/zscore_summary.csv`, `results/zscore_nonconst_summary.csv`, `results/zscore_nonconst_worst_cases.csv`.
-**Speaker notes:** [failure_analysis.md](failure_analysis.md).
+**Figure:** `results/supervised/fig_grouped_cv.png`.
+**Tables:** `results/supervised/summary.csv`, `results/supervised/fold_summary.csv`.
+**Notes:** [SUPERVISED_BASELINE.md](SUPERVISED_BASELINE.md).
 
 ## 7. Proposed method — learned encoding, graph reasoning, ranking
 
@@ -77,7 +77,7 @@ Do not copy published accuracy numbers into our results table.
 ## 8. Semester timeline — staged experiments
 
 - Week 1, completed: official subset, data audit, two z-score baselines, executed notebooks, review outline.
-- Weeks 2–3: resolve data-quality questions with upstream evidence; try robust scaling (median/MAD) and aggregation; freeze incident-level splits.
+- Next stage, completed: fixed Random Forest, scenario-grouped five-fold evaluation, supervised notebook and failure analysis; later reserve genuinely new data.
 - Weeks 4–6: train a simple temporal encoder/ranker; compare against statistical methods and report uncertainty across runs.
 - Weeks 7–9: verify topology, add GNN, and run graph/no-graph ablations; schedule controlled fault data collection only at that stage.
 - Weeks 10–12: evaluate held-out scenarios, attempt a reserved-system test if data is available, analyze failures, and package the report; broader deployment is capstone work.

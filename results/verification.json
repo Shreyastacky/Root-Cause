@@ -18,8 +18,23 @@
       "name": "02_baseline.ipynb",
       "executed_code_cells": 5,
       "embedded_images": 1
+    },
+    {
+      "name": "03_supervised.ipynb",
+      "executed_code_cells": 6,
+      "embedded_images": 1
     }
   ],
   "slides_checked": 8,
-  "missing_local_links": []
+  "missing_local_links": [],
+  "supervised": {
+    "status": "passed",
+    "scenario_groups": 25,
+    "folds_independently_refitted": 5,
+    "held_out_incidents": 123,
+    "candidate_scores_verified": 1649,
+    "numeric_features": 48,
+    "source_hashes_verified": true,
+    "summary_rows_checked": 51
+  }
 }
