@@ -19,5 +19,12 @@
     "executed_cells": 6,
     "errors": 0,
     "html": "03_supervised.html"
+  },
+  {
+    "notebook": "04_robustness.ipynb",
+    "code_cells": 5,
+    "executed_cells": 5,
+    "errors": 0,
+    "html": "04_robustness.html"
   }
 ]

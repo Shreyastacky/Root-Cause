@@ -116,6 +116,9 @@ def main():
     if (results / 'supervised/split_manifest.json').exists():
         from verify_supervised import verify_supervised
         report['supervised'] = verify_supervised()
+    if (results / 'robustness/manifest.json').exists():
+        from verify_robustness import verify_robustness
+        report['robustness'] = verify_robustness()
     (results / 'verification.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 

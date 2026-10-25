@@ -23,6 +23,11 @@
       "name": "03_supervised.ipynb",
       "executed_code_cells": 6,
       "embedded_images": 1
+    },
+    {
+      "name": "04_robustness.ipynb",
+      "executed_code_cells": 5,
+      "embedded_images": 1
     }
   ],
   "slides_checked": 8,
@@ -36,5 +41,15 @@
     "numeric_features": 48,
     "source_hashes_verified": true,
     "summary_rows_checked": 51
+  },
+  "robustness": {
+    "status": "passed",
+    "forests_independently_refitted": 15,
+    "candidate_scores_verified": 6596,
+    "rankings_verified": 500,
+    "summary_rows_checked": 68,
+    "original_predictions_unchanged": true,
+    "raw_features_recomputed": true,
+    "input_source_hashes_verified": 10
   }
 }

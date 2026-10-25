@@ -361,6 +361,9 @@ Do not copy published accuracy numbers into our results table.
     if (results / 'supervised/summary.csv').exists():
         from rca.ml_report import update_project_reports
         readme, slides = update_project_reports(readme, slides, execution)
+    if (results / 'robustness/summary.csv').exists():
+        from rca.robustness_report import update_project_reports as update_robustness
+        readme, slides = update_robustness(readme, slides)
     (ROOT / 'README.md').write_text(textwrap.dedent(readme), encoding='utf-8')
     (ROOT / 'docs/slide_outline.md').write_text(textwrap.dedent(slides), encoding='utf-8')
     print('Updated README.md and docs/slide_outline.md from saved results.')

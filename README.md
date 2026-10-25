@@ -85,6 +85,24 @@ ranking metric. See the [full supervised report](docs/SUPERVISED_BASELINE.md),
 
 ![Grouped supervised comparison](results/supervised/fig_grouped_cv.png)
 
+## Robustness audit: what does the forest learn?
+
+| Experiment                              |   Incidents | AC@1   | AC@3   | AC@5    | Avg@5   |
+|:----------------------------------------|------------:|:-------|:-------|:--------|:--------|
+| Full features / scenario CV (reference) |         123 | 91.87% | 95.93% | 99.19%  | 96.10%  |
+| Availability only / same scenario CV    |         123 | 27.64% | 63.41% | 75.61%  | 58.05%  |
+| Behavior only / same scenario CV        |         123 | 92.68% | 95.12% | 99.19%  | 95.61%  |
+| Full features / held-out root service   |         123 | 93.50% | 97.56% | 100.00% | 97.24%  |
+
+The first three rows reuse identical scenario folds. The fourth holds out all
+incidents rooted at one service at a time and answers a different generalization question.
+The service may still appear as a non-root training candidate. This is diagnostic
+within-application evaluation, not an untouched or cross-system test.
+See the [full audit](docs/ROBUSTNESS_AUDIT.md), [fixed protocol](docs/ROBUSTNESS_PROTOCOL.md),
+and [executed notebook](notebooks/04_robustness.ipynb) ([HTML](results/04_robustness.html)).
+
+![Robustness audit](results/robustness/fig_robustness.png)
+
 ## Original heuristic results
 
 All metrics are **service-level**, between 0 and 1, shown here as percentages.
@@ -197,6 +215,7 @@ model-produced rank. No timestamp correction was guessed.
 - Read-only rendered copies: [EDA](results/01_eda.html) and
   [baseline](results/02_baseline.html). These include executed outputs.
 - [03_supervised.ipynb](notebooks/03_supervised.ipynb): 48 features, grouped splits, trained Random Forest, comparisons and failures. [Rendered copy](results/03_supervised.html).
+- [04_robustness.ipynb](notebooks/04_robustness.ipynb): fixed feature ablations, root-service holdout, all scores and failures. [Rendered copy](results/04_robustness.html).
 - [Eight-slide outline](docs/slide_outline.md), [related work](docs/related_work.md),
   and [execution record](results/notebook_execution.json).
 
@@ -227,7 +246,7 @@ slide numbers from CSVs.
 .\.venv\Scripts\python.exe -m pip check
 ```
 
-Thirteen focused tests check the score formula, injection boundary, missing-value
+Focused unit tests check the score formula, injection boundary, missing-value
 handling, deterministic ties, invalid windows, metric denominators, and that
 `zscore_nonconst` ignores constant metrics. New tests also cover feature semantics, identity independence, and disjoint scenario folds.
 Constructed test fixtures are not presented as benchmark recordings.
@@ -248,7 +267,7 @@ remain deliberately not set up. Existing raw files were not modified.
 ## Next steps
 
 1. Try robust scaling (median/MAD) and other aggregations as stronger statistical baselines.
-2. Completed: scenario-grouped five-fold splits and a fixed Random Forest baseline. Reserve genuinely new data for the next evaluation; do not retune to these CV results.
+2. Completed: fixed Random Forest, scenario-grouped CV, feature ablations and root-service holdout. Reserve genuinely new data before further model selection; do not retune to these diagnostic results.
 3. Learn an anomaly encoder and compare it with a simple learned service ranker.
 4. Verify application dependency topology, then test a GNN against an otherwise
    identical model without graph edges. Do not assume graph learning is causal.
@@ -262,6 +281,8 @@ Luan Pham, Hongyu Zhang, Huong Ha, Flora Salim, and Xiuzhen Zhang. 2025.
 Companion Proceedings of the ACM Web Conference 2025. The upstream dataset
 is MIT licensed; our experiment is independently implemented.
 
-## Supervised verification
+## Supervised and robustness verification
 
-All 3 notebooks have saved executed outputs. The supervised split records 25 scenario groups and 1649 candidate rows. The verification script checks fold isolation, source/data hashes, candidate scores and saved rankings, and reproduces the forests.
+All 4 notebooks have saved executed outputs. The supervised split records 25 scenario groups and 1649 candidate rows. The verification script checks fold isolation, source/data hashes, candidate scores and saved rankings, and reproduces the forests.
+
+The robustness verifier independently refits all 15 additional forests, checks feature subsets and root-service isolation, and reproduces candidate scores and metrics.

@@ -63,16 +63,16 @@ Do not copy published accuracy numbers into our results table.
 **Tables:** `results/supervised/summary.csv`, `results/supervised/fold_summary.csv`.
 **Notes:** [SUPERVISED_BASELINE.md](SUPERVISED_BASELINE.md).
 
-## 7. Proposed method — learned encoding, graph reasoning, ranking
+## 7. Robustness audit — feature shortcuts and new fault locations
 
-- Encode each service's normalized metric sequence into an anomaly representation.
-- Pass representations through a GNN over a separately verified service dependency graph, then output service ranks.
-- Train later on synthetic/controlled fault-injection scenarios; telemetry should be collected from running applications. Purely simulated series must be identified separately.
-- Split by whole incidents/scenarios; compare with the same encoder without graph edges and stronger statistical baselines.
-- Cross-system test: train on one application and reserve a different application; graph acquisition, training, and that test are **not yet run**.
+- Availability only: AC@1=27.64%; behavior only: 92.68%, using the original scenario folds and fixed forest parameters.
+- Full features, with every incident rooted at the test service excluded from training: AC@1=93.50% on 123 evaluable incidents.
+- A held-out root may still appear as a negative candidate in training; this is a different task from scenario CV, not cross-system transfer.
+- Keep every failure and both invalid cases visible; missing-feature zeros can still reveal schema after explicit flags are removed.
+- Next: reserve new data, test fixed observation windows and robust statistics; verify topology before a temporal/GNN extension.
 
-**Diagram:** metrics → learned anomaly encoder → dependency GNN → service ranking.
-**Status:** RE1-OB does not supply traces or an audited dependency graph. No new fault injection this week.
+**Figure:** `results/robustness/fig_robustness.png`.
+**Notes:** [ROBUSTNESS_AUDIT.md](ROBUSTNESS_AUDIT.md).
 
 ## 8. Semester timeline — staged experiments
 
